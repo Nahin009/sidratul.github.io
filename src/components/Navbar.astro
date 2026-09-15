@@ -1,0 +1,227 @@
+<nav class="sticky top-0 z-50 border-b border-zinc-200/80 bg-[#fafaf9]/90 backdrop-blur">
+  <div class="mx-auto max-w-5xl px-6">
+
+    <div class="flex h-16 items-center justify-between">
+
+      <!-- Name -->
+      <a
+        href="/"
+        class="text-base font-semibold tracking-tight text-zinc-900"
+      >
+        Nahin Khan
+      </a>
+
+      <!-- Desktop navigation -->
+      <div class="hidden items-center gap-7 text-sm md:flex">
+
+        <a
+          href="#about"
+          data-nav-link
+          class="text-zinc-500 transition hover:text-zinc-900"
+        >
+          About
+        </a>
+
+        <a
+          href="#publication"
+          data-nav-link
+          class="text-zinc-500 transition hover:text-zinc-900"
+        >
+          Publication
+        </a>
+
+        <a
+          href="#projects"
+          data-nav-link
+          class="text-zinc-500 transition hover:text-zinc-900"
+        >
+          Projects
+        </a>
+
+        <a
+          href="#education"
+          data-nav-link
+          class="text-zinc-500 transition hover:text-zinc-900"
+        >
+          Education
+        </a>
+
+        <a
+          href="#contact"
+          data-nav-link
+          class="text-zinc-500 transition hover:text-zinc-900"
+        >
+          Contact
+        </a>
+
+        <a
+          href="/cv.pdf"
+          data-analytics-event="cv_click"
+          class="border-l border-zinc-300 pl-7 text-zinc-700 transition hover:text-zinc-950"
+        >
+          CV ↗
+        </a>
+
+      </div>
+
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-button"
+        type="button"
+        class="rounded-md px-3 py-2 text-sm text-zinc-600 transition hover:bg-zinc-100 md:hidden"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+      >
+        Menu
+      </button>
+
+    </div>
+
+
+    <!-- Mobile navigation -->
+    <div
+      id="mobile-menu"
+      class="hidden border-t border-zinc-200 py-4 md:hidden"
+    >
+
+      <div class="flex flex-col gap-1 text-sm">
+
+        <a
+          href="#about"
+          data-nav-link
+          class="rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-100"
+        >
+          About
+        </a>
+
+        <a
+          href="#publication"
+          data-nav-link
+          class="rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-100"
+        >
+          Publication
+        </a>
+
+        <a
+          href="#projects"
+          data-nav-link
+          class="rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-100"
+        >
+          Projects
+        </a>
+
+        <a
+          href="#education"
+          data-nav-link
+          class="rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-100"
+        >
+          Education
+        </a>
+
+        <a
+          href="#contact"
+          data-nav-link
+          class="rounded-md px-3 py-2 text-zinc-600 hover:bg-zinc-100"
+        >
+          Contact
+        </a>
+
+        <a
+            href="/cv.pdf"
+            data-analytics-event="cv_click"
+            class="mt-2 rounded-md border border-zinc-300 px-3 py-2 !text-zinc-700 hover:bg-zinc-100 hover:!text-zinc-950"
+        >
+            Curriculum Vitae ↗
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+
+<script>
+  const button = document.querySelector("#mobile-menu-button");
+  const menu = document.querySelector("#mobile-menu");
+
+  // Mobile menu
+  button?.addEventListener("click", () => {
+    const isOpen = !menu?.classList.contains("hidden");
+
+    menu?.classList.toggle("hidden");
+    button?.setAttribute("aria-expanded", String(!isOpen));
+  });
+
+  // Close mobile menu after selecting a section
+  menu?.querySelectorAll("a[data-nav-link]").forEach((link) => {
+    link.addEventListener("click", () => {
+      menu?.classList.add("hidden");
+      button?.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // Highlight the section currently visible on screen
+  const sections = document.querySelectorAll("main section[id]");
+  const navLinks = document.querySelectorAll("a[data-nav-link]");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const currentId = entry.target.getAttribute("id");
+
+        navLinks.forEach((link) => {
+          const href = link.getAttribute("href");
+
+          if (href === `#${currentId}`) {
+            link.classList.add("font-medium", "text-zinc-950");
+            link.classList.remove("text-zinc-500", "text-zinc-600");
+          } else {
+            link.classList.remove("font-medium", "text-zinc-950");
+            link.classList.add("text-zinc-500");
+          }
+        });
+      });
+    },
+    {
+      rootMargin: "-35% 0px -55% 0px",
+    }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+
+  // Track section views in Google Analytics
+  const trackedSections = document.querySelectorAll("main section[id]");
+  const viewedSections = new Set<string>();
+
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const section = entry.target.getAttribute("id");
+
+        if (!section || viewedSections.has(section)) return;
+
+        viewedSections.add(section);
+
+        const gtag = (window as any).gtag;
+
+        if (typeof gtag === "function") {
+          gtag("event", "section_view", {
+            section: section,
+          });
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    }
+  );
+
+  trackedSections.forEach((section) => sectionObserver.observe(section));
+</script>

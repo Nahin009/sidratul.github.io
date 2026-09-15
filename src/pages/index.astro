@@ -1,17 +1,90 @@
 ---
+import Navbar from "../components/Navbar.astro";
+import Hero from "../components/Hero.astro";
+import About from "../components/About.astro";
+import Publication from "../components/Publication.astro";
+import Projects from "../components/Projects.astro";
+import Education from "../components/Education.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
 
+import "../styles/global.css";
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Nahin Khan — Academic Portfolio" />
+    <title>Nahin Khan — Academic Portfolio</title>
+
+    <!-- Google Analytics -->
+    <script
+	async
+	src="https://www.googletagmanager.com/gtag/js?id=G-W3KZ9T2HL4"
+	></script>
+
+	<script>
+	window.dataLayer = window.dataLayer || [];
+
+	function gtag(...args: any[]) {
+		window.dataLayer.push(args);
+	}
+
+	window.gtag = gtag;
+
+	gtag("js", new Date());
+	gtag("config", "G-W3KZ9T2HL4");
+	</script>
+
+	<script>
+	  document.addEventListener("click", (event) => {
+		const target = event.target as HTMLElement;
+
+		const link = target.closest("a[data-analytics-event]");
+
+		if (!link) return;
+
+		const eventName = link.getAttribute("data-analytics-event");
+
+		if (!eventName) return;
+
+		const parameters: Record<string, string> = {};
+
+		const platform = link.getAttribute("data-analytics-platform");
+
+		if (platform) {
+		parameters.platform = platform;
+		}
+
+		const href = link.getAttribute("href");
+
+		if (href) {
+		parameters.destination = href;
+		}
+
+		const gtag = (window as any).gtag;
+
+		if (typeof gtag === "function") {
+		gtag("event", eventName, parameters);
+		}
+	});
+	</script>
+  </head>
+
+  <body>
+    <Navbar />
+
+    <main>
+      <Hero />
+      <About />
+      <Publication />
+      <Projects />
+      <Education />
+      <Contact />
+    </main>
+
+    <Footer />
+  </body>
 </html>
